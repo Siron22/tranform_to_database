@@ -13,6 +13,7 @@ class MovieData:
         self.table_name = None
         self.connection = None
         self.cursor = None
+        self.searches = 1
 
     @staticmethod
     def _file_parser(file_path):
@@ -75,11 +76,20 @@ class MovieData:
         par = self._verify_input_data(parametr)
         data = (value,)
         sql_script = f"SELECT * FROM {self.table_name} WHERE {par}=?"
+        file_name = f"../data/search_result{self.searches}.txt"
         self.cursor.execute(sql_script, data)
         result = self.cursor.fetchall()
-        for film in result:
-            print(film)
-        return result
+        with open(file_name, 'w') as file:
+            for film in result:
+                line = str()
+                for e in film:
+                    if film.index(e) < len(film) - 1:
+                        line += e + ', '
+                    else:
+                        line += e + ' '
+                file.write(line + '\n')
+        print(f'Search result with parameters: "{parametr} is {value}" is ready')
+        self.searches += 1
 
     def __exit__(self, exc_class, exc, traceback):
         self.connection.commit()
