@@ -81,12 +81,7 @@ class MovieData:
         result = self.cursor.fetchall()
         with open(file_name, 'w') as file:
             for film in result:
-                line = str()
-                for e in film:
-                    if film.index(e) < len(film) - 1:
-                        line += e + ', '
-                    else:
-                        line += e + ' '
+                line = " ".join(film)
                 file.write(line + '\n')
         print(f'Search result with parameters: "{parametr} is {value}" is ready')
         self.searches += 1
@@ -99,9 +94,9 @@ class MovieData:
 if __name__ == "__main__":
     with MovieData('movies.json') as m:
         m.make_table_with_data('my_movies')
+        m.user_search('genre', 'Comedy')
         m.user_search('genre', 'Horror')
-
-
+        m.user_search('genre', 'Action')
 
 
 
